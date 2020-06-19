@@ -19,7 +19,7 @@ namespace Z4_BMazur.Controllers
         }
 
         // GET: Home/Details/5
-        public ActionResult Details(int id)
+        public ActionResult Details(int id, Table table)
         {
             return View();
         }
@@ -36,7 +36,6 @@ namespace Z4_BMazur.Controllers
         {
             try
             {
-                // TODO: Add insert logic here
                 if (!ModelState.IsValid)
                     return View();
 
@@ -54,20 +53,25 @@ namespace Z4_BMazur.Controllers
         // GET: Home/Edit/5
         public ActionResult Edit(int id)
         {
-            return View();
+            return View(_db.Table.Find(id));
         }
 
         // POST: Home/Edit/5
         [HttpPost]
-        public ActionResult Edit(int id, FormCollection collection)
+        public ActionResult Edit(int id, Table table)
         {
             try
             {
-                // TODO: Add update logic here
                 if (!ModelState.IsValid)
                     return View();
-
-                _db.Table.Edit(collection);
+                var Jumper = _db.Table.Find(id);
+                Jumper.Name = table.Name;
+                Jumper.Surname = table.Surname;
+                Jumper.Age = table.Age;
+                Jumper.Jump1 = table.Jump1;
+                Jumper.Note = table.Note;
+                Jumper.K_Point = table.K_Point;
+                _db.SaveChanges();
 
                 return RedirectToAction("Index");
             }
@@ -80,16 +84,17 @@ namespace Z4_BMazur.Controllers
         // GET: Home/Delete/5
         public ActionResult Delete(int id)
         {
-            return View();
+            return View(_db.Table.Find(id));
         }
 
         // POST: Home/Delete/5
         [HttpPost]
-        public ActionResult Delete(int id, FormCollection collection)
+        public ActionResult Delete(int id, Table table)
         {
             try
             {
-                // TODO: Add delete logic here
+                _db.Table.Remove(_db.Table.Find(id));
+                _db.SaveChangesAsync();
 
                 return RedirectToAction("Index");
             }
